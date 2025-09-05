@@ -1,0 +1,64 @@
+{% extends 'products/base.html' %}
+
+{% block title %}Carrito de Compras{% endblock %}
+
+{% block content %}
+    <h2 class="text-2xl font-bold mb-6">Carrito de Compras</h2>
+    {% if cart %}
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b">
+                        <th class="text-left p-2">Producto</th>
+                        <th class="text-left p-2">Color</th>
+                        <th class="text-left p-2">Precio</th>
+                        <th class="text-left p-2">Cantidad</th>
+                        <th class="text-left p-2">Total</th>
+                        <th class="text-left p-2">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart %}
+                        <tr class="border-b">
+                            <td class="p-2">
+                                <div class="flex items-center">
+                                    <img src="{{ item.image }}" alt="{{ item.name }}" class="w-16 h-16 object-cover rounded mr-4">
+                                    <span>{{ item.name }}</span>
+                                </div>
+                            </td>
+                            <td class="p-2">
+                                {% if item.color_name %}
+                                    <span class="px-2 py-1 bg-gray-100 rounded-full text-sm">
+                                        {{ item.color_name }}
+                                    </span>
+                                {% else %}
+                                    <span class="text-gray-400">Sin color</span>
+                                {% endif %}
+                            </td>
+                            <td class="p-2">${{ item.price }}</td>
+                            <td class="p-2">{{ item.quantity }}</td>
+                            <td class="p-2">${{ item.total_price }}</td>
+                            <td class="p-2">
+                                {% if item.product_id %}
+                                    <a href="{% url 'remove_from_cart' item.product_id %}{% if item.color_id %}?color={{ item.color_id }}{% endif %}" 
+                                    class="text-red-500 hover:text-red-700">
+                                        Eliminar
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="flex justify-between items-center">
+            <p class="text-lg font-semibold">Total: ${{ cart.get_total_price }}</p>
+            <a href="{% url 'product_list' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Seguir comprando</a>
+            <a href="{% url 'clear_cart' %}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Vaciar carrito</a>
+            <a href="#" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Enviar por WhatsApp</a>
+        </div>
+    {% else %}
+        <p class="text-gray-600">Tu carrito está vacío.</p>
+        <a href="{% url 'product_list' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Volver a la tienda</a>
+    {% endif %}
+{% endblock %}

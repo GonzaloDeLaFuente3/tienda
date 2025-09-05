@@ -1,0 +1,56 @@
+{% extends 'products/base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Imagen del producto -->
+        <div>
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-auto rounded-lg shadow">
+            {% else %}
+                <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <span class="text-gray-500">Sin imagen</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Detalles del producto -->
+        <div>
+            <h1 class="text-3xl font-bold mb-4">{{ product.name }}</h1>
+            <p class="text-gray-600 mb-4">{{ product.description }}</p>
+            <p class="text-2xl font-bold text-blue-600 mb-4">${{ product.price }}</p>
+            
+            <form action="{% url 'add_to_cart' product.id %}" method="get" class="space-y-4">
+                {% if product.colors.exists %}
+                    <div>
+                        <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Selecciona un color:</label>
+                        <select name="color" id="color" required class="w-full p-2 border rounded-md">
+                            <option value="">Seleccionar color</option>
+                            {% for color in product.colors.all %}
+                                <option value="{{ color.id }}">{{ color.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endif %}
+
+                <div class="flex space-x-4">
+                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition">
+                        Agregar al carrito
+                    </button>
+                    <a href="{% url 'product_list' %}" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300 transition">
+                        Volver
+                    </a>
+                </div>
+            </form>
+
+            {% if product.stock <= 5 and product.stock > 0 %}
+                <p class="text-yellow-600 mt-4">¡Quedan solo {{ product.stock }} unidades!</p>
+            {% elif product.stock == 0 %}
+                <p class="text-red-600 mt-4">Producto agotado</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
