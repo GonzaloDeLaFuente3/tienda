@@ -1,36 +1,80 @@
 <!DOCTYPE html>
-<html lang="es">
+{% load dark_mode %}
+<html lang="es" class="{% dark_mode %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda - {% block title %}{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',  // Asegura que Tailwind use el modo oscuro basado en clases
+        };
+
+        // Función para aplicar el modo oscuro/claro
+        function applyDarkMode(darkModeEnabled) {
+            if (darkModeEnabled) {
+                document.documentElement.classList.add('dark');
+                console.log("Modo oscuro activado");  // Log para depuración
+            } else {
+                document.documentElement.classList.remove('dark');
+                console.log("Modo claro activado");  // Log para depuración
+            }
+        }
+
+        // Cargar el estado inicial del modo oscuro desde las cookies
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkMode = document.cookie.includes('dark_mode=on');
+            console.log("Modo oscuro inicial desde cookie:", darkMode);  // Log para depuración
+            applyDarkMode(darkMode);
+        });
+
+        // Alternar el modo oscuro al hacer clic en el botón
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButton = document.getElementById('dark-mode-toggle');
+            toggleButton.addEventListener('click', function() {
+                const darkMode = document.cookie.includes('dark_mode=on');
+                const newMode = !darkMode;
+
+                // Actualizar la cookie
+                document.cookie = `dark_mode=${newMode ? 'on' : 'off'}; path=/; max-age=31536000`;  // 1 año de duración
+                console.log("Nuevo modo oscuro:", newMode);  // Log para depuración
+
+                // Aplicar el modo oscuro/claro
+                applyDarkMode(newMode);
+            });
+        });
+    </script>
 </head>
-<body class="bg-gray-100">
-    <header class="bg-white shadow">
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
+    <header class="bg-white dark:bg-gray-800 shadow">
         <div class="container mx-auto px-4 py-6">
-            <h1 class="text-3xl font-bold text-gray-800">Tienda Online</h1>
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Tienda Online</h1>
+            <div class="flex space-x-4">
+                <button id="dark-mode-toggle" class="ml-4 px-3 py-1 bg-gray-200 dark:bg-gray-600 rounded text-gray-800 dark:text-gray-100">
+                    Modo Oscuro
+                </button>
+            </div>
         </div>
-    
         <div class="container mx-auto px-4 py-2 flex justify-end">
-            <a href="{% url 'cart' %}" class="text-gray-800 hover:text-gray-600">Carrito</a>
+            <a href="{% url 'cart' %}" class="text-gray-800 hover:text-gray-600 dark:text-gray-200 dark:hover:text-gray-400">Carrito</a>
         </div>
     </header>
     <main class="container mx-auto px-4 py-6">
         {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-            <div class="p-4 {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} rounded-lg mb-4">
-                {{ message }}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="p-4 {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %} rounded-lg mb-4">
+                        {{ message }}
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
         {% endif %}
         {% block content %}{% endblock %}
     </main>
-    <footer class="bg-white shadow mt-8 py-6">
+    <footer class="bg-white shadow mt-8 py-6 dark:bg-gray-800">
         <div class="container mx-auto px-4">
-            <p class="text-center text-gray-600">© 2025 Tienda Online</p>
+            <p class="text-center text-gray-600 dark:text-gray-300">© 2025 Tienda Online</p>
         </div>
     </footer>
 </body>
