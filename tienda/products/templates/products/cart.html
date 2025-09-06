@@ -55,7 +55,8 @@
             <p class="text-lg font-semibold">Total: ${{ cart.get_total_price }}</p>
             <a href="{% url 'product_list' %}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Seguir comprando</a>
             <a href="{% url 'clear_cart' %}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Vaciar carrito</a>
-            <a href="#" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Enviar por WhatsApp</a>
+            <a href="{% url 'whatsapp' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Enviar por WhatsApp</a>
+
         </div>
     {% else %}
         <p class="text-gray-600">Tu carrito está vacío.</p>
