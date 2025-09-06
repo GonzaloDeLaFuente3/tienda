@@ -18,7 +18,10 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')  # 'development' o 'produc
 # Configuración de seguridad
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure--tb2ahyqm717!k!dbxob$k%73&yrdvqcep51dyt-i4ue3!n=)l')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost,tienda-jhn2.onrender.com').split(',')
+CSRF_TRUSTED_ORIGINS = ['https://tienda-jhn2.onrender.com']
+
+
 
 # Configuración de aplicaciones
 INSTALLED_APPS = [
@@ -108,6 +111,7 @@ USE_TZ = True
 # Configuración de archivos estáticos y media
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
