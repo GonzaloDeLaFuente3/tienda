@@ -6,6 +6,9 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Cargar variables de entorno
 load_dotenv()
@@ -36,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "cloudinary_storage", 
+    "cloudinary", 
     "products",
 ]
 
@@ -138,3 +143,23 @@ if ENVIRONMENT == 'production':
 
 # Campo por defecto para claves primarias
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Configuración de Cloudinary 
+if ENVIRONMENT == 'production':
+    # Configuración de Cloudinary
+    cloudinary.config(
+        cloud_name=os.getenv('dsuwuseo0'),
+        api_key=os.getenv('987653541595698'),
+        api_secret=os.getenv('F3hRIiYmTyKsjVikuwufxjaAV5Y'),
+        secure=True
+    )
+    
+    # Storage para archivos media
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    
+    # URLs para media
+    MEDIA_URL = '/media/'
+else:
+    # Para desarrollo local, mantener configuración actual
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
