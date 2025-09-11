@@ -22,8 +22,8 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 # Configuración de hosts
 if ENVIRONMENT == 'production':
-    ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
-    CSRF_TRUSTED_ORIGINS = [f'https://{host}' for host in ALLOWED_HOSTS if host]
+    ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+    CSRF_TRUSTED_ORIGINS = [f'https://{host.strip()}' for host in ALLOWED_HOSTS if host.strip() and not host.strip().startswith('127.0.0.1') and not host.strip().startswith('localhost')]
 else:
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
     CSRF_TRUSTED_ORIGINS = []
