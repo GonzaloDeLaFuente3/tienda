@@ -8,6 +8,8 @@ from django.views.generic import FormView
 from django.urls import reverse_lazy
 from .forms import CustomerForm 
 import urllib.parse
+from django.http import HttpResponse
+import os
 
 class ProductListView(ListView):
     model = Product
@@ -105,3 +107,15 @@ class WhatsAppView(FormView):
         message += "*En breve nos pondremos en contacto con usted!.*"
 
         return urllib.parse.quote(message)
+    
+def debug_cloudinary(request):
+    cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME', 'NO DEFINIDO')
+    api_key = os.getenv('CLOUDINARY_API_KEY', 'NO DEFINIDO')
+    api_secret = 'DEFINIDO' if os.getenv('CLOUDINARY_API_SECRET') else 'NO DEFINIDO'
+    
+    return HttpResponse(f"""
+    <h1>Debug Cloudinary</h1>
+    <p>Cloud Name: {cloud_name}</p>
+    <p>API Key: {api_key}</p>
+    <p>API Secret: {api_secret}</p>
+    """)
