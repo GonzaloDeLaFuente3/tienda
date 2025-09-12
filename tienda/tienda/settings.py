@@ -119,6 +119,7 @@ USE_TZ = True
 # Configuración de archivos estáticos y media
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Para desarrollo local, crear carpeta static si no existe
 if ENVIRONMENT == 'development':
@@ -133,6 +134,30 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Configuración de WhiteNoise para archivos estáticos
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# ======= CONFIGURACIÓN DE ARCHIVOS MEDIA =======
+if ENVIRONMENT == 'production':
+    # Configuración de Cloudinary para PRODUCCIÓN
+    import cloudinary
+    import cloudinary.uploader
+    import cloudinary.api
+    
+    cloudinary.config(
+        cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+        api_key=os.getenv('CLOUDINARY_API_KEY'),
+        api_secret=os.getenv('CLOUDINARY_API_SECRET'),
+        secure=True
+    )
+    
+    # Storage para archivos media
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    
+    # URLs para media
+    MEDIA_URL = '/media/'
+else:
+    # Para desarrollo LOCAL
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Configuración de seguridad para producción
 if ENVIRONMENT == 'production':
     SESSION_COOKIE_SECURE = True
@@ -143,23 +168,3 @@ if ENVIRONMENT == 'production':
 
 # Campo por defecto para claves primarias
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Configuración de Cloudinary 
-if ENVIRONMENT == 'production':
-    # Configuración de Cloudinary
-    cloudinary.config(
-        cloud_name=os.getenv('dsuwuseo0'),
-        api_key=os.getenv('987653541595698'),
-        api_secret=os.getenv('F3hRIiYmTyKsjVikuwufxjaAV5Y'),
-        secure=True
-    )
-    
-    # Storage para archivos media
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    
-    # URLs para media
-    MEDIA_URL = '/media/'
-else:
-    # Para desarrollo local, mantener configuración actual
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
