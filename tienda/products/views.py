@@ -119,3 +119,47 @@ def debug_cloudinary(request):
     <p>API Key: {api_key}</p>
     <p>API Secret: {api_secret}</p>
     """)
+
+def debug_images(request):
+    from django.http import HttpResponse
+    from .models import Product
+    from django.conf import settings
+    import os
+    
+    html = "<h1>Debug de Imágenes</h1>"
+    
+    # Configuración de Django
+    html += f"<h2>Configuración</h2>"
+    html += f"<p>ENVIRONMENT: {getattr(settings, 'ENVIRONMENT', 'No definido')}</p>"
+    html += f"<p>DEFAULT_FILE_STORAGE: {getattr(settings, 'DEFAULT_FILE_STORAGE', 'No definido')}</p>"
+    html += f"<p>MEDIA_URL: {settings.MEDIA_URL}</p>"
+    html += f"<p>DEBUG: {settings.DEBUG}</p>"
+    
+    # Variables de entorno de Cloudinary
+    html += f"<h2>Cloudinary</h2>"
+    cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME', 'NO DEFINIDO')
+    api_key = os.getenv('CLOUDINARY_API_KEY', 'NO DEFINIDO')
+    api_secret = 'DEFINIDO' if os.getenv('CLOUDINARY_API_SECRET') else 'NO DEFINIDO'
+    html += f"<p>Cloud Name: {cloud_name}</p>"
+    html += f"<p>API Key: {api_key}</p>"
+    html += f"<p>API Secret: {api_secret}</p>"
+    
+    # Productos y sus imágenes
+    html += f"<h2>Productos</h2>"
+    products = Product.objects.all()
+    
+    for product in products:
+        html += f"<h3>Producto: {product.name}</h3>"
+        if product.image:
+            html += f"<p>Imagen field: {product.image}</p>"
+            html += f"<p>Imagen name: {product.image.name}</p>"
+            try:
+                html += f"<p>Imagen URL: {product.image.url}</p>"
+                html += f"<img src='{product.image.url}' style='max-width:200px;border:1px solid red;' onerror='this.style.border=\"3px solid red\"; this.alt=\"ERROR CARGANDO\"'>"
+            except Exception as e:
+                html += f"<p>Error obteniendo URL: {str(e)}</p>"
+        else:
+            html += f"<p>Sin imagen</p>"
+        html += "<hr>"
+    
+    return HttpResponse(html)

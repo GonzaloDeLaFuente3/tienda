@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ProductListView, ProductDetailView, CartView, add_to_cart, remove_from_cart, clear_cart, WhatsAppView, debug_cloudinary
+from .views import ProductListView, ProductDetailView, CartView, add_to_cart, remove_from_cart, clear_cart, WhatsAppView, debug_cloudinary, debug_images
 
 urlpatterns = [
     path('', ProductListView.as_view(), name='product_list'),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('remove_from_cart/<int:product_id>/', remove_from_cart, name='remove_from_cart'),
     path('whatsapp/', WhatsAppView.as_view(), name='whatsapp'),
     path('debug-cloudinary/', debug_cloudinary, name='debug_cloudinary'),
+    path('debug-images/', debug_images, name='debug_images'),
 ]
