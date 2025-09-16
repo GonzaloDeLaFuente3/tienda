@@ -2,12 +2,12 @@ import os
 import sys
 
 # Agregar la ruta del proyecto
-path = '/home/tuusuario/mysite'  # Cambiar 'tuusuario' por tu nombre de usuario de PythonAnywhere
+path = '/home/velour/mysite'  # Cambiar 'tuusuario' por tu nombre de usuario de PythonAnywhere
 if path not in sys.path:
     sys.path.insert(0, path)
 
 # Agregar la ruta de la carpeta tienda
-path = '/home/tuusuario/mysite/tienda'  # Cambiar 'tuusuario' por tu nombre de usuario
+path = '/home/velour/mysite/tienda'  # Cambiar 'tuusuario' por tu nombre de usuario
 if path not in sys.path:
     sys.path.insert(0, path)
 
