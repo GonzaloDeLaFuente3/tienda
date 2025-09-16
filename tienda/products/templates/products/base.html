@@ -5,10 +5,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tienda - {% block title %}{% endblock %}</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <script>
         tailwind.config = {
             darkMode: 'class',  // Asegura que Tailwind use el modo oscuro basado en clases
+            theme: {
+                extend: {
+                    colors: {
+                        isabelline: {
+                            DEFAULT: '#edede9',
+                            100: '#34342a',
+                            200: '#676754',
+                            300: '#989881',
+                            400: '#c2c2b5',
+                            500: '#edede9',
+                            600: '#f0f0ed',
+                            700: '#f4f4f2',
+                            800: '#f8f8f6',
+                            900: '#fbfbfb',
+                        },
+                        timberwolf: {
+                            DEFAULT: '#d6ccc2',
+                            100: '#312921',
+                            200: '#625241',
+                            300: '#937a62',
+                            400: '#b6a391',
+                            500: '#d6ccc2',
+                            600: '#ded6ce',
+                            700: '#e7e0da',
+                            800: '#efebe7',
+                            900: '#f7f5f3',
+                        },
+                        linen: {
+                            DEFAULT: '#f5ebe0',
+                            100: '#473017',
+                            200: '#8e5f2e',
+                            300: '#c78f52',
+                            400: '#debd99',
+                            500: '#f5ebe0',
+                            600: '#f7efe6',
+                            700: '#f9f3ed',
+                            800: '#fbf7f3',
+                            900: '#fdfbf9',
+                        },
+                        champagne_pink: {
+                            DEFAULT: '#e3d5ca',
+                            100: '#38291e',
+                            200: '#70523b',
+                            300: '#a87b59',
+                            400: '#c5a891',
+                            500: '#e3d5ca',
+                            600: '#e8ddd4',
+                            700: '#eee6df',
+                            800: '#f4eeea',
+                            900: '#f9f7f4',
+                        },
+                        pale_dogwood: {
+                            DEFAULT: '#d5bdaf',
+                            100: '#33241b',
+                            200: '#664735',
+                            300: '#986b50',
+                            400: '#ba937c',
+                            500: '#d5bdaf',
+                            600: '#ddcabf',
+                            700: '#e6d7cf',
+                            800: '#eee4df',
+                            900: '#f7f2ef',
+                        },
+                    },
+                },
+            },
         };
 
         // Función para aplicar el modo oscuro/claro
@@ -46,18 +114,85 @@
         });
     </script>
 </head>
+
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
-    <header class="bg-white dark:bg-gray-800 shadow">
-        <div class="container mx-auto px-4 py-6">
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Tienda Online</h1>
-            <div class="flex space-x-4">
-                <button id="dark-mode-toggle" class="ml-4 px-3 py-1 bg-gray-200 dark:bg-gray-600 rounded text-gray-800 dark:text-gray-100">
-                    Modo Oscuro
-                </button>
+    <header class="bg-white dark:bg-gray-800 shadow-lg border-b-2 border-champagne_pink-200 dark:border-champagne_pink-700">
+        <div class="container mx-auto px-4 py-6 ">
+            
+
+            <!-- Barra principal del header -->
+            <div class="flex items-center justify-between">
+                <!-- Logo y título -->
+                <div class="flex items-center space-x-3">
+                    <!-- Logo  -->
+                    <div class="w-12 h-12 bg-gradient-to-br from-champagne_pink-400 to-pale_dogwood-400 rounded-full flex items-center justify-center shadow-lg">
+                        <i data-lucide="shopping-bag" class="w-6 h-6 text-white"></i>
+                    </div>
+                    {% comment %} titulo {% endcomment %}
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 tracking-tight">
+                            Velour
+                        </h1>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">Tienda Online</p>
+                    </div>
+                </div>
+
+                <!-- Navegación y controles -->
+                <div class="flex items-center space-x-4">
+                    <!-- Barra de búsqueda (opcional) -->
+                    {% comment %} <div class="hidden lg:flex items-center bg-gray-100 dark:bg-gray-700 rounded-full px-4 py-2 w-64">
+                        <i data-lucide="search" class="w-4 h-4 text-gray-500 dark:text-gray-400 mr-2"></i>
+                        <input 
+                            type="text" 
+                            placeholder="Buscar productos..." 
+                            class="bg-transparent text-sm flex-1 outline-none text-gray-700 dark:text-gray-300"
+                        >
+                    </div> {% endcomment %}
+
+                    <!-- Controles del usuario -->
+                    <div class="flex items-center space-x-2">
+                        <!-- Botón de modo oscuro -->
+                        <button 
+                            id="dark-mode-toggle" 
+                            class="p-2 bg-gray-100 dark:bg-gray-700 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
+                            title="Cambiar modo"
+                        >
+                            <i data-lucide="sun" class="w-5 h-5 dark:hidden"></i>
+                            <i data-lucide="moon" class="w-5 h-5 hidden dark:block"></i>
+                        </button>
+
+                        <!-- Carrito -->
+                        <a 
+                            href="{% url 'cart' %}" 
+                            class="relative p-2 bg-champagne_pink-100 dark:bg-champagne_pink-800 rounded-full text-champagne_pink-600 dark:text-champagne_pink-300 hover:bg-champagne_pink-200 dark:hover:bg-champagne_pink-700 transition-all"
+                            title="Ver carrito"
+                        >
+                            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                            <!-- Badge para cantidad de items (opcional) -->
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                0
+                            </span>
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="container mx-auto px-4 py-2 flex justify-end">
-            <a href="{% url 'cart' %}" class="text-gray-800 hover:text-gray-600 dark:text-gray-200 dark:hover:text-gray-400">Carrito</a>
+
+            <!-- Navegación móvil (hamburger menu placeholder) -->
+            <div class="md:hidden mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-2 flex-1 mr-4">
+                        <i data-lucide="search" class="w-4 h-4 text-gray-500 dark:text-gray-400 mr-2"></i>
+                        <input 
+                            type="text" 
+                            placeholder="Buscar..." 
+                            class="bg-transparent text-sm flex-1 outline-none text-gray-700 dark:text-gray-300"
+                        >
+                    </div>
+                    <button class="p-2 text-gray-600 dark:text-gray-300">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
     <main class="container mx-auto px-4 py-6">
@@ -72,10 +207,57 @@
         {% endif %}
         {% block content %}{% endblock %}
     </main>
-    <footer class="bg-white shadow mt-8 py-6 dark:bg-gray-800">
-        <div class="container mx-auto px-4">
-            <p class="text-center text-gray-600 dark:text-gray-300">© 2025 Tienda Online</p>
+
+    <div class="bg-isabelline-500 dark:bg-gray-800 shadow mt-8">
+        <div class="container mx-auto px-6 py-10">
+            <div class="grid md:grid-cols-2 gap-8 text-center md:text-left">
+            
+                <!-- Contacto -->
+                <div class="text-center">
+                    <h2 class="text-lg font-semibold text-timberwolf-300 mb-4">Contacto</h2>
+                    <p class="text-gray-700 dark:text-gray-300">📍 Catamarca, Argentina</p>
+                    <p class="text-gray-700 dark:text-gray-300">📞 +54 3834025848</p>
+                    <p class="text-gray-700 dark:text-gray-300">✉️ correo@gmail.com</p>
+                </div>
+
+                <!-- Redes Sociales -->
+                <div class="text-center">
+                    <h2 class="text-lg font-semibold text-timberwolf-300 mb-4">Síguenos</h2>
+
+                    <div class="flex justify-center  space-x-6">
+                    <a href="#" class="text-pale_dogwood-300 hover:text-purple-500 transition">
+                        <i data-lucide="instagram" class="w-6 h-6"></i>
+                    </a>
+                    <a href="#" class="text-pale_dogwood-300 hover:text-blue-500 transition">
+                        <i data-lucide="facebook" class="w-6 h-6"></i>
+                    </a>
+                    <a href="https://wa.me/543834025848" class="text-pale_dogwood-300 hover:text-green-500 transition" aria-label="WhatsApp">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.484 3.087"/>
+                        </svg>
+                    </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Línea final -->
+            <div class="  border-t border-champagne_pink-400 mt-8 pt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+            </div>
         </div>
-    </footer>
+    </div>
+    
+    <footer bg-pale_dogwood-300 class=" bg-pale_dogwood-300 text-center text-white p-4">
+        <h2 class="text-lg font-bold text-timberwolf-600 mb-4">Derechos</h2>
+        <p class=" dark:text-gray-300">
+        © 2025 Velour  <br />
+        Todos los derechos reservados <br />
+        De La Fuente Gonzalo
+        </p>
+    </footer> 
+
+
+<script>
+  lucide.createIcons();
+</script>
 </body>
 </html>
