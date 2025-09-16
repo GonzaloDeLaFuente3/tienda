@@ -26,7 +26,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/home/velour/mysite/media/'  # Cambiar 'tuusuario' por tu nombre de usuario
+MEDIA_ROOT = '/home/velour/tienda/tienda/media/'  # Cambiar 'tuusuario' por tu nombre de usuario
 
 # Configuración adicional de seguridad
 SECURE_BROWSER_XSS_FILTER = True
