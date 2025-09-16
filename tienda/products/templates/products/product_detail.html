@@ -3,54 +3,254 @@
 {% block title %}{{ product.name }}{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Imagen del producto -->
-        <div>
-            {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-auto rounded-lg shadow">
-            {% else %}
-                <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-                    <span class="text-gray-500">Sin imagen</span>
-                </div>
-            {% endif %}
-        </div>
-
-        <!-- Detalles del producto -->
-        <div>
-            <h1 class="text-3xl font-bold mb-4">{{ product.name }}</h1>
-            <p class="text-gray-600 mb-4">{{ product.description }}</p>
-            <p class="text-2xl font-bold text-blue-600 mb-4">${{ product.price }}</p>
-            
-            <form action="{% url 'add_to_cart' product.id %}" method="get" class="space-y-4">
-                {% if product.colors.exists %}
-                    <div>
-                        <label for="color" class="block text-sm font-medium text-gray-700 mb-2">Selecciona un color:</label>
-                        <select name="color" id="color" required class="w-full p-2 border rounded-md">
-                            <option value="">Seleccionar color</option>
-                            {% for color in product.colors.all %}
-                                <option value="{{ color.id }}">{{ color.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                {% endif %}
-
-                <div class="flex space-x-4">
-                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition">
-                        Agregar al carrito
-                    </button>
-                    <a href="{% url 'product_list' %}" class="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300 transition">
-                        Volver
+<div class="min-h-screen bg-gradient-to-br from-isabelline-500 to-linen-500 dark:from-gray-900 dark:to-gray-800 py-8 rounded-2xl shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Breadcrumb -->
+        <nav class="flex mb-8" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="{% url 'product_list' %}" class="inline-flex items-center text-sm font-medium text-timberwolf-400 hover:text-blue-500 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                        </svg>
+                        Productos
                     </a>
-                </div>
-            </form>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="ml-1 text-sm font-medium text-gray-500 dark:text-gray-300">{{ product.name|truncatechars:30 }}</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
 
-            {% if product.stock <= 5 and product.stock > 0 %}
-                <p class="text-yellow-600 mt-4">¡Quedan solo {{ product.stock }} unidades!</p>
-            {% elif product.stock == 0 %}
-                <p class="text-red-600 mt-4">Producto agotado</p>
-            {% endif %}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Galería de imágenes -->
+            <div class="space-y-4">
+                <div class="relative group">
+                    {% if product.image %}
+                        <div class="aspect-square overflow-hidden rounded-2xl shadow-2xl bg-white dark:bg-gray-800">
+                            <img src="{{ product.image.url }}" 
+                                 alt="{{ product.name }}" 
+                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                 id="main-image">
+                        </div>
+                        
+                        <!-- Botón de zoom -->
+                        
+                        <button onclick="openImageModal()" 
+                            class="absolute top-4 right-4 
+                                bg-white/70 dark:bg-gray-800/70 
+                                backdrop-blur-md 
+                                text-gray-700 dark:text-gray-300 
+                                p-2 rounded-full shadow-lg 
+                                hover:scale-110 hover:shadow-xl hover:bg-white/90 dark:hover:bg-gray-700/90 
+                                transition-all duration-300 ease-out 
+                                opacity-0 group-hover:opacity-100">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </button>
+                    {% else %}
+                        <div class="aspect-square bg-gradient-to-br from-timberwolf-200 to-champagne_pink-200 dark:from-gray-700 dark:to-gray-600 rounded-2xl shadow-2xl flex items-center justify-center">
+                            <div class="text-center text-timberwolf-400 dark:text-gray-400">
+                                <svg class="w-16 h-16 mx-auto mb-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                                </svg>
+                                <p class="text-lg font-medium">Sin imagen disponible</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Thumbnails (si tienes múltiples imágenes) -->
+                <!-- <div class="grid grid-cols-4 gap-2">
+                    <img src="#" class="aspect-square object-cover rounded-lg cursor-pointer hover:opacity-75 transition-opacity">
+                </div> -->
+            </div>
+
+            <!-- Información del producto -->
+            <div class="space-y-6">
+                <!-- Header del producto -->
+                <div>
+                    <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4 leading-tight">
+                        {{ product.name }}
+                    </h1>
+                    
+                    {% if product.description %}
+                        <div class="prose prose-gray dark:prose-invert max-w-none mb-6">
+                            <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                                {{ product.description }}
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Precio -->
+                <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-timberwolf-200 dark:border-gray-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Precio</p>
+                            <p class="text-4xl font-bold text-pale_dogwood-300 dark:text-pale_dogwood-400">
+                                ${{ product.price }}
+                            </p>
+                        </div>
+                        <div class="text-right">
+                            {% if product.stock > 5 %}
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    En stock
+                                </span>
+                            {% elif product.stock <= 5 and product.stock > 0 %}
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                    </svg>
+                                    ¡Solo {{ product.stock }}!
+                                </span>
+                            {% elif product.stock == 0 %}
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Agotado
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulario de compra -->
+                <form action="{% url 'add_to_cart' product.id %}" method="get" class="space-y-6" id="product-form">
+                    {% if product.colors.exists %}
+                        <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-timberwolf-200 dark:border-gray-700">
+                            <label for="color" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">
+                                Selecciona un color:
+                            </label>
+                            
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                {% for color in product.colors.all %}
+                                    <label class="relative cursor-pointer">
+                                        <input type="radio" name="color" value="{{ color.id }}" required 
+                                               class="peer sr-only">
+                                        <div class="flex items-center justify-center p-3 border-2 border-timberwolf-200 dark:border-gray-600 rounded-lg transition-all duration-200 peer-checked:border-pale_dogwood-500 peer-checked:bg-pale_dogwood-50 dark:peer-checked:bg-pale_dogwood-900/20 hover:border-champagne_pink-300 dark:hover:border-gray-500">
+                                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300 peer-checked:text-pale_dogwood-700 dark:peer-checked:text-pale_dogwood-300">
+                                                {{ color.name }}
+                                            </span>
+                                        </div>
+                                        <div class="absolute inset-0 rounded-lg peer-checked:ring-2 peer-checked:ring-pale_dogwood-500 peer-checked:ring-offset-2 dark:peer-checked:ring-offset-gray-800"></div>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Botones de acción -->
+                    <div class="space-y-4">
+                        {% if product.stock > 0 %}
+                            <button type="submit" 
+                                    class="w-full bg-gradient-to-r from-pale_dogwood-500 to-champagne_pink-500 hover:from-pale_dogwood-600 hover:to-champagne_pink-600 text-black font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center group">
+                                <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+                                </svg>
+                                Agregar al carrito
+                            </button>
+                        {% else %}
+                            <button disabled 
+                                    class="w-full bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 font-bold py-4 px-6 rounded-xl cursor-not-allowed flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                </svg>
+                                Producto agotado
+                            </button>
+                        {% endif %}
+                        
+                        <a href="{% url 'product_list' %}" 
+                           class="w-full bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm border-2 border-timberwolf-300 dark:border-gray-600 text-timberwolf-300 dark:text-gray-300 hover:bg-timberwolf-50 dark:hover:bg-gray-600 font-medium py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0L2.586 11H13a1 1 0 100-2H2.586l3.707-3.707a1 1 0 00-1.414-1.414l-5.414 5.414a1 1 0 000 1.414l5.414 5.414a1 1 0 001.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Volver a la tienda
+                        </a>
+                    </div>
+                </form>
+
+                <!-- Información adicional -->
+                <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-6 border border-timberwolf-200 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4 text-center">Información del producto</h3>
+                    <div class="space-y-3">
+
+                        <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                            <svg class="w-4 h-4 mr-3 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            Garantía de calidad
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                            <svg class="w-4 h-4 mr-3 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                            </svg>
+                            Soporte por WhatsApp
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Modal de imagen (opcional) -->
+<div id="image-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
+    <div class="relative max-w-4xl max-h-full">
+        <button onclick="closeImageModal()" 
+                class="absolute top-4 right-4 text-white hover:text-gray-300 z-10">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+            </svg>
+        </button>
+        <img src="" alt="" id="modal-image" class="max-w-full max-h-full object-contain rounded-lg">
+    </div>
+</div>
+
+<script>
+function openImageModal() {
+    const mainImage = document.getElementById('main-image');
+    const modal = document.getElementById('image-modal');
+    const modalImage = document.getElementById('modal-image');
+    
+    if (mainImage && modal && modalImage) {
+        modalImage.src = mainImage.src;
+        modalImage.alt = mainImage.alt;
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('image-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Cerrar modal con ESC
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeImageModal();
+    }
+});
+
+// Cerrar modal al hacer click fuera de la imagen
+document.getElementById('image-modal')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeImageModal();
+    }
+});
+</script>
 {% endblock %}
