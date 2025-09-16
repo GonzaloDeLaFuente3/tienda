@@ -11,6 +11,9 @@ path = '/home/velour/tienda/tienda'  # Cambiar 'tuusuario' por tu nombre de usua
 if path not in sys.path:
     sys.path.insert(0, path)
 
+# Cambiar al directorio correcto
+os.chdir('/home/velour/tienda/tienda')
+
 # Configurar Django settings
 os.environ['DJANGO_SETTINGS_MODULE'] = 'tienda.settings_production'
 
