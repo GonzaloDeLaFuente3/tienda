@@ -3,15 +3,133 @@
 {% block title %}Lista de Productos{% endblock %}
 
 {% block content %}
-    <h2 class="text-2xl font-bold mb-6">Productos Disponibles</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <!-- Header Section con animación sutil -->
+    <div class="mb-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-light text-gray-800 dark:text-isabelline-500 mb-2 tracking-wide">
+            Nuestra Colección
+        </h2>
+        <div class="w-24 h-0.5 bg-gradient-to-r from-champagne_pink-500 to-pale_dogwood-500 mx-auto"></div>
+        <p class="text-timberwolf-400 dark:text-timberwolf-300 mt-4 text-lg font-light">
+            Descubre productos únicos y de calidad excepcional
+        </p>
+    </div>
+
+    <!-- Filtros y ordenamiento (opcional para futuro) -->
+    {% comment %} <div class="mb-8 flex justify-between items-center">
+        <div class="text-sm text-timberwolf-400 dark:text-timberwolf-300">
+            {{ products|length }} producto{{ products|length|pluralize }}
+        </div>
+        <!-- Espacio para futuras opciones de filtrado -->
+    </div> {% endcomment %}
+
+    <!-- Grid de productos con animaciones y hover effects -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
         {% for product in products %}
-            <div class="bg-white rounded-lg shadow p-4">
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-48 object-cover rounded mb-4">
-                <h3 class="text-lg font-semibold">{{ product.name }}</h3>
-                <p class="text-gray-600">${{ product.price }}</p>
-                <a href="{% url 'product_detail' product.pk %}" class="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Ver detalle</a>
+            <div class="group bg-isabelline-500 dark:bg-timberwolf-100 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-linen-300 dark:border-timberwolf-200 hover:border-champagne_pink-400 dark:hover:border-champagne_pink-300 hover:-translate-y-2">
+                <!-- Contenedor de imagen con overlay -->
+                <div class="relative overflow-hidden rounded-t-2xl">
+                    <img 
+                        src="{{ product.image.url }}" 
+                        alt="{{ product.name }}" 
+                        class="w-full h-56 sm:h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+                        loading="lazy"
+                    >
+                    <!-- Overlay con gradiente sutil -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    <!-- Indicador de disponibilidad -->
+                    <div class="absolute top-3 right-3">
+                        {% if product.stock >= 1 %}
+                        <span class="bg-blue-300 text-timberwolf-100 px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm">
+                            Disponible
+                        </span>
+                        {% else %}
+                        <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm">
+                            Sin Stock
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Contenido del producto -->
+                <div class="p-6">
+                    <h3 class="text-xl text-center font-medium text-gray-800 dark:text-isabelline-500 mb-2 group-hover:text-pale_dogwood-300 transition-colors duration-300 line-clamp-2">
+                        {{ product.name }}
+                    </h3>
+                    <p class="text-black dark:text-timberwolf-300 text-sm  mb-4 line-clamp-3">
+                        {{ product.description }}
+                    
+                    <!-- Precio con estilo destacado -->
+                    <div class="mb-4">
+                        <span class="text-2xl font-bold text-pale_dogwood-400 dark:text-pale_dogwood-300">
+                            ${{ product.price|floatformat:0 }}
+                        </span>
+                        {% if product.original_price %}
+                            <span class="text-sm text-timberwolf-400 dark:text-timberwolf-300 line-through ml-2">
+                                ${{ product.original_price|floatformat:0 }}
+                            </span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Botón de acción con animación -->
+                    <a 
+                        href="{% url 'product_detail' product.pk %}" 
+                        class="w-full inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-champagne_pink-400 to-pale_dogwood-400 hover:from-champagne_pink-500 hover:to-pale_dogwood-500 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 group/btn hover:border  hover:border-blue-500 hover:border-4 hover:text-blue-500"
+                    >
+                        <span class="group-hover/btn:translate-x-1 transition-transform duration-200 ">
+                            Ver Detalles
+                        </span>
+                        <svg class="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        {% empty %}
+            <!-- Estado vacío elegante -->
+            <div class="col-span-full text-center py-16">
+                <div class="max-w-md mx-auto">
+                    <div class="w-24 h-24 bg-linen-400 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-12 h-12 text-timberwolf-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M9 9l-3-3"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-medium text-gray-800 dark:text-isabelline-500 mb-2">
+                        No hay productos disponibles
+                    </h3>
+                    <p class="text-timberwolf-400 dark:text-timberwolf-300">
+                        Pronto tendremos productos increíbles para ti
+                    </p>
+                </div>
             </div>
         {% endfor %}
     </div>
+
+    <!-- Espaciado adicional al final -->
+    <div class="mt-16"></div>
+
+    <!-- Script para animaciones de scroll (opcional) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animación de entrada para las tarjetas
+            const cards = document.querySelectorAll('.group');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 100);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
 {% endblock %}
