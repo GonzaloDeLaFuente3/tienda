@@ -36,7 +36,7 @@
                                         <div class="relative flex-shrink-0">
                                             <img src="{{ item.image }}" alt="{{ item.name }}" 
                                                  class="w-20 h-20 object-cover rounded-lg shadow-md">
-                                            <div class="absolute -top-2 -right-2 bg-pale_dogwood-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                                            <div class="absolute -top-2 -right-2 bg-pale_dogwood-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center dark:bg-blue-200 dark:text-black">
                                                 {{ item.quantity }}
                                             </div>
                                         </div>
@@ -62,7 +62,7 @@
                                             
                                             <!-- Precios -->
                                             <div class="flex items-center justify-between">
-                                                <div class="text-sm text-gray-600 dark:text-gray-400">
+                                                <div class="text-sm text-gray-600 dark:text-gray-400 ">
                                                     <span class="font-medium">${{ item.price }}</span> × {{ item.quantity }}
                                                 </div>
                                                 <div class="text-lg font-bold text-black dark:text-pale_dogwood-400">
