@@ -3,6 +3,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
 
 # Distribución / paquetes
 *.egg
@@ -161,6 +162,10 @@ db.sqlite3-journal
 media/
 staticfiles/
 *.mo
+# Archivos de static y media generados
+/static/
+/media/
+/tienda/static/
 
 # Archivos de cobertura de pruebas
 htmlcov/
@@ -173,6 +178,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+*.pot
 
 # Archivos de despliegue
 .deploy/
