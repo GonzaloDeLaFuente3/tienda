@@ -5,16 +5,16 @@ from .settings import *
 DEBUG = False
 
 # Permitir tu dominio de PythonAnywhere
-ALLOWED_HOSTS = ['velour.pythonanywhere.com']  # Cambiar 'tuusuario' por tu nombre de usuario
+ALLOWED_HOSTS = ['velour.pythonanywhere.com']
 
 # Base de datos para producción (MySQL en PythonAnywhere)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'velour$tienda',  # Cambiar 'tuusuario' por tu nombre de usuario
-        'USER': 'velour',        # Cambiar 'tuusuario' por tu nombre de usuario
-        'PASSWORD': 'Gonzalo43878451.',  # Lo configuraremos más tarde
-        'HOST': 'velour.mysql.pythonanywhere-services.com',  # Cambiar 'tuusuario'
+        'NAME': 'velour$tienda',
+        'USER': 'velour',
+        'PASSWORD': 'Gonzalo43878451.',  # Pon tu password real aquí
+        'HOST': 'velour.mysql.pythonanywhere-services.com',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
@@ -26,7 +26,9 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/home/velour/tienda/tienda/media/'  # Cambiar 'tuusuario' por tu nombre de usuario
+
+MEDIA_ROOT = '/home/velour/tienda/tienda/media/'
+
 
 # Configuración adicional de seguridad
 SECURE_BROWSER_XSS_FILTER = True
