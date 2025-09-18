@@ -87,7 +87,7 @@ class WhatsAppView(FormView):
         return redirect(whatsapp_url)
 
     def _generate_whatsapp_message(self, cart, customer_name, customer_phone):
-        message = f"Nuevo Pedido de {customer_name}\n"
+        message = f"Nuevo Pedido de: {customer_name}\n"
         message += f"Teléfono: {customer_phone}\n"
         message += "_" * 20 + "\n"
         message += "*Detalle del Pedido*\n\n"
@@ -102,6 +102,46 @@ class WhatsAppView(FormView):
         message += f"*Total a pagar: ${cart.get_total_price()}*\n"
         message += "_" * 20 + "\n"
         message += "*¡Gracias por comunicarse!*\n"
-        message += "*En breve nos pondremos en contacto con usted!.*"
+        message += "*Envia este mensaje y en breve nos pondremos en contacto con usted!.*"
 
         return urllib.parse.quote(message)
+    
+def update_cart_quantity(request, product_id):
+    if request.method == 'POST':
+        product = get_object_or_404(Product, id=product_id)
+        color_id = request.POST.get('color_id')
+        action = request.POST.get('action')  # 'increase' o 'decrease'
+        
+        cart = Cart(request)
+        
+        # Crear la clave del producto (igual que en cart.py)
+        if color_id:
+            key = f"{product_id}_{color_id}"
+        else:
+            key = str(product_id)
+        
+        if key in cart.cart:
+            current_quantity = cart.cart[key]['quantity']
+            
+            if action == 'increase':
+                # Verificar stock antes de aumentar
+                if current_quantity < product.stock:
+                    new_quantity = current_quantity + 1
+                else:
+                    messages.error(request, f'No hay más stock disponible para {product.name}')
+                    return redirect('cart')
+            elif action == 'decrease':
+                new_quantity = current_quantity - 1
+                if new_quantity <= 0:
+                    # Si la cantidad llega a 0, eliminar el producto
+                    cart.remove(product, color_id=color_id)
+                    messages.success(request, f'{product.name} eliminado del carrito')
+                    return redirect('cart')
+            else:
+                return redirect('cart')
+            
+            # Actualizar la cantidad
+            cart.add(product, color_id=color_id, quantity=new_quantity, update_quantity=True)
+            messages.success(request, f'Cantidad actualizada para {product.name}')
+        
+    return redirect('cart')

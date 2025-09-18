@@ -58,13 +58,44 @@
                                                     <span class="text-gray-400 dark:text-gray-500 text-sm italic">Sin color especificado</span>
                                                 {% endif %}
                                             </div>
-                                            
-                                            
-                                            <!-- Precios -->
+
+                                            <!-- Controles de cantidad -->
                                             <div class="flex items-center justify-between">
-                                                <div class="text-sm text-gray-600 dark:text-gray-400 ">
-                                                    <span class="font-medium">${{ item.price }}</span> × {{ item.quantity }}
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="text-sm text-gray-600 dark:text-gray-400">
+                                                        <span class="font-medium">${{ item.price }}</span> c/u
+                                                    </div>
+                                                    
+                                                    <!-- Botones de cantidad -->
+                                                    <div class="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg">
+                                                        <form method="post" action="{% url 'update_cart_quantity' item.product_id %}" class="inline">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="color_id" value="{{ item.color_id }}">
+                                                            <input type="hidden" name="action" value="decrease">
+                                                            <button type="submit" class="px-3 py-1 text-gray-600 dark:text-gray-300 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors rounded-l-lg">
+                                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                                                                </svg>
+                                                            </button>
+                                                        </form>
+                                                        
+                                                        <span class="px-4 py-1 text-sm font-medium text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-600">
+                                                            {{ item.quantity }}
+                                                        </span>
+                                                        
+                                                        <form method="post" action="{% url 'update_cart_quantity' item.product_id %}" class="inline">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="color_id" value="{{ item.color_id }}">
+                                                            <input type="hidden" name="action" value="increase">
+                                                            <button type="submit" class="px-3 py-1 text-gray-600 dark:text-gray-300 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors rounded-r-lg">
+                                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                                                                </svg>
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 </div>
+
                                                 <div class="text-lg font-bold text-black dark:text-pale_dogwood-400">
                                                     ${{ item.total_price }}
                                                 </div>
