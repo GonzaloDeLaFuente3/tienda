@@ -170,7 +170,7 @@
                             <i data-lucide="shopping-cart" class="w-5 h-5"></i>
                             <!-- Badge para cantidad de items (opcional) -->
                             <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                                0
+                                {{ cart_count|default:0 }}
                             </span>
                         </a>
                     </div>
