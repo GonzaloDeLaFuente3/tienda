@@ -83,7 +83,7 @@ class WhatsAppView(FormView):
         customer_name = form.cleaned_data['name']
         customer_phone = form.cleaned_data['phone']
         message = self._generate_whatsapp_message(cart, customer_name, customer_phone)
-        whatsapp_url = f"https://wa.me/543834025848?text={message}"
+        whatsapp_url = f"https://wa.me/543834653289?text={message}"
         return redirect(whatsapp_url)
 
     def _generate_whatsapp_message(self, cart, customer_name, customer_phone):
