@@ -3,116 +3,122 @@
 {% block title %}Carrito de Compras{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gradient-to-br from-isabelline-500 to-linen-500 dark:from-gray-900 dark:to-gray-800 py-8 rounded-2xl">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-gradient-to-br from-isabelline-500 to-linen-500 dark:from-gray-900 dark:to-gray-800 py-4 sm:py-8 rounded-2xl">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
         <!-- Header del Carrito -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+        <div class="text-center mb-6 sm:mb-8">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">
                 Carrito de Compras
             </h1>
-            <p class="text-timberwolf-300 dark:text-gray-400">
+            <p class="text-sm sm:text-base text-timberwolf-300 dark:text-gray-400">
                 Revisa tus productos antes de finalizar la compra
             </p>
         </div>
 
         {% if cart %}
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 <!-- Lista de Productos -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-timberwolf-200 dark:border-gray-700">
-                        <div class="p-6">
-                            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-timberwolf-200 dark:border-gray-700">
+                        <div class="p-3 sm:p-6">
+                            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
                                 </svg>
-                                Productos en tu carrito
+                                <span class="text-sm sm:text-base lg:text-lg">Productos en tu carrito</span>
                             </h2>
                             
-                            <!-- Items del carrito -->
-                            <div class="space-y-4">
+                            <!-- Items del carrito - Optimizado para móvil -->
+                            <div class="space-y-3 sm:space-y-4">
                                 {% for item in cart %}
-                                    <div class="flex items-center p-4 bg-linen-500 dark:bg-gray-700 rounded-xl border border-champagne_pink-200 dark:border-gray-600 hover:shadow-md transition-all duration-200">
-                                        <!-- Imagen del producto -->
-                                        <div class="relative flex-shrink-0">
-                                            <img src="{{ item.image }}" alt="{{ item.name }}" 
-                                                 class="w-20 h-20 object-cover rounded-lg shadow-md">
-                                            <div class="absolute -top-2 -right-2 bg-pale_dogwood-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center dark:bg-blue-200 dark:text-black">
-                                                {{ item.quantity }}
+                                    <div class="bg-linen-500 dark:bg-gray-700 rounded-lg sm:rounded-xl border border-champagne_pink-200 dark:border-gray-600 hover:shadow-md transition-all duration-200">
+                                        <!-- Layout móvil: imagen arriba, contenido abajo -->
+                                        <div class="p-3 sm:p-4">
+                                            <!-- Imagen y cantidad -->
+                                            <div class="flex justify-between items-start mb-3">
+                                                <div class="relative flex-shrink-0">
+                                                    <img src="{{ item.image }}" alt="{{ item.name }}" 
+                                                         class="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg shadow-md">
+                                                    <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-pale_dogwood-500 text-white text-xs font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center dark:bg-blue-200 dark:text-black">
+                                                        {{ item.quantity }}
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Botón eliminar en esquina superior derecha -->
+                                                <div class="flex-shrink-0">
+                                                    {% if item.product_id %}
+                                                        <a href="{% url 'remove_from_cart' item.product_id %}{% if item.color_id %}?color={{ item.color_id }}{% endif %}" 
+                                                           class="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 text-red-500 hover:text-red-700 hover:bg-red-200 dark:hover:bg-red-900/20 rounded-full transition-colors duration-200"
+                                                           onclick="return confirm('¿Estás seguro de eliminar este producto?')">
+                                                            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                                            </svg>
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
                                             </div>
-                                        </div>
-                                        
-                                        <!-- Detalles del producto -->
-                                        <div class="flex-1 ml-4">
-                                            <h3 class="font-semibold text-gray-800 dark:text-gray-100 text-lg">
-                                                {{ item.name }}
-                                            </h3>
                                             
-                                            <!-- Color -->
-                                            <div class="flex items-center mt-1 mb-2">
-                                                {% if item.color_name %}
-                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-champagne_pink-200 dark:bg-gray-600 text-champagne_pink-800 dark:text-gray-300">
-                                                        
-                                                        {{ item.color_name }}
-                                                    </span>
-                                                {% else %}
-                                                    <span class="text-gray-400 dark:text-gray-500 text-sm italic">Sin color especificado</span>
-                                                {% endif %}
-                                            </div>
+                                            <!-- Información del producto -->
+                                            <div class="space-y-2 sm:space-y-3">
+                                                <h3 class="font-semibold text-gray-800 dark:text-gray-100 text-base sm:text-lg leading-tight">
+                                                    {{ item.name }}
+                                                </h3>
+                                                
+                                                <!-- Color -->
+                                                <div class="flex justify-start">
+                                                    {% if item.color_name %}
+                                                        <span class="inline-flex items-center px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium bg-champagne_pink-200 dark:bg-gray-600 text-champagne_pink-800 dark:text-gray-300">
+                                                            {{ item.color_name }}
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="text-gray-400 dark:text-gray-500 text-xs sm:text-sm italic">Sin color especificado</span>
+                                                    {% endif %}
+                                                </div>
 
-                                            <!-- Controles de cantidad -->
-                                            <div class="flex items-center justify-between">
-                                                <div class="flex items-center space-x-3">
-                                                    <div class="text-sm text-gray-600 dark:text-gray-400">
-                                                        <span class="font-medium">${{ item.price }}</span> c/u
+                                                <!-- Precio y controles - Layout para móvil -->
+                                                <div class="space-y-3">
+                                                    <!-- Precio unitario -->
+                                                    <div class="flex justify-between items-center">
+                                                        <div class="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                                                            <span class="font-medium">${{ item.price }}</span> c/u
+                                                        </div>
+                                                        <div class="text-base sm:text-lg font-bold text-black dark:text-pale_dogwood-400">
+                                                            ${{ item.total_price }}
+                                                        </div>
                                                     </div>
                                                     
-                                                    <!-- Botones de cantidad -->
-                                                    <div class="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg">
-                                                        <form method="post" action="{% url 'update_cart_quantity' item.product_id %}" class="inline">
-                                                            {% csrf_token %}
-                                                            <input type="hidden" name="color_id" value="{{ item.color_id }}">
-                                                            <input type="hidden" name="action" value="decrease">
-                                                            <button type="submit" class="px-3 py-1 text-gray-600 dark:text-gray-300 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors rounded-l-lg">
-                                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
-                                                                </svg>
-                                                            </button>
-                                                        </form>
-                                                        
-                                                        <span class="px-4 py-1 text-sm font-medium text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-600">
-                                                            {{ item.quantity }}
-                                                        </span>
-                                                        
-                                                        <form method="post" action="{% url 'update_cart_quantity' item.product_id %}" class="inline">
-                                                            {% csrf_token %}
-                                                            <input type="hidden" name="color_id" value="{{ item.color_id }}">
-                                                            <input type="hidden" name="action" value="increase">
-                                                            <button type="submit" class="px-3 py-1 text-gray-600 dark:text-gray-300 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors rounded-r-lg">
-                                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
-                                                                </svg>
-                                                            </button>
-                                                        </form>
+                                                    <!-- Controles de cantidad centrados en móvil -->
+                                                    <div class="flex justify-center sm:justify-start">
+                                                        <div class="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg">
+                                                            <form method="post" action="{% url 'update_cart_quantity' item.product_id %}" class="inline">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" name="color_id" value="{{ item.color_id }}">
+                                                                <input type="hidden" name="action" value="decrease">
+                                                                <button type="submit" class="px-3 py-2 sm:px-3 sm:py-1 text-gray-600 dark:text-gray-300 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors rounded-l-lg">
+                                                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                                                                    </svg>
+                                                                </button>
+                                                            </form>
+                                                            
+                                                            <span class="px-4 py-2 sm:px-4 sm:py-1 text-sm font-medium text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-600 min-w-[3rem] text-center">
+                                                                {{ item.quantity }}
+                                                            </span>
+                                                            
+                                                            <form method="post" action="{% url 'update_cart_quantity' item.product_id %}" class="inline">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" name="color_id" value="{{ item.color_id }}">
+                                                                <input type="hidden" name="action" value="increase">
+                                                                <button type="submit" class="px-3 py-2 sm:px-3 sm:py-1 text-gray-600 dark:text-gray-300 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors rounded-r-lg">
+                                                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                                                                    </svg>
+                                                                </button>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
-
-                                                <div class="text-lg font-bold text-black dark:text-pale_dogwood-400">
-                                                    ${{ item.total_price }}
-                                                </div>
                                             </div>
-                                        </div>
-                                        
-                                        <!-- Botón eliminar -->
-                                        <div class="ml-4">
-                                            {% if item.product_id %}
-                                                <a href="{% url 'remove_from_cart' item.product_id %}{% if item.color_id %}?color={{ item.color_id }}{% endif %}" 
-                                                   class="inline-flex items-center justify-center w-10 h-10 text-red-500 hover:text-red-700 hover:bg-red-200 dark:hover:bg-red-900/20 rounded-full transition-colors duration-200"
-                                                   onclick="return confirm('¿Estás seguro de eliminar este producto?')">
-                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                                                    </svg>
-                                                </a>
-                                            {% endif %}
                                         </div>
                                     </div>
                                 {% endfor %}
@@ -122,48 +128,48 @@
                 </div>
                 
                 <!-- Resumen del pedido -->
-                <div class="lg:col-span-1">
-                    <div class="sticky top-8">
-                        <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-xl border border-timberwolf-200 dark:border-gray-700 p-6">
-                            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <div class="lg:col-span-1 mt-4 lg:mt-0">
+                    <div class="lg:sticky lg:top-8">
+                        <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-timberwolf-200 dark:border-gray-700 p-4 sm:p-6">
+                            <h2 class="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 sm:mb-6 flex items-center">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/>
                                     <path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/>
                                 </svg>
-                                Resumen del pedido
+                                <span class="text-sm sm:text-base lg:text-lg">Resumen del pedido</span>
                             </h2>
                             
                             <!-- Desglose de precios -->
-                            <div class="space-y-3 mb-6">
-                                <div class="flex justify-between text-gray-600 dark:text-gray-400">
+                            <div class="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+                                <div class="flex justify-between text-sm sm:text-base text-gray-600 dark:text-gray-400">
                                     <span>Subtotal ({{ cart|length }} producto{{ cart|length|pluralize }})</span>
                                     <span>${{ cart.get_total_price }}</span>
                                 </div>
-                                <div class="border-t border-timberwolf-200 dark:border-gray-600 pt-3">
+                                <div class="border-t border-timberwolf-200 dark:border-gray-600 pt-2 sm:pt-3">
                                     <div class="flex justify-between items-center">
-                                        <span class="text-lg font-bold text-gray-800 dark:text-gray-100">Total</span>
-                                        <span class="text-2xl font-bold text-pale_dogwood-600 dark:text-pale_dogwood-400">
+                                        <span class="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100">Total</span>
+                                        <span class="text-xl sm:text-2xl font-bold text-pale_dogwood-600 dark:text-pale_dogwood-400">
                                             ${{ cart.get_total_price }}
                                         </span>
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Botones de acción -->
+                            <!-- Botones de acción optimizados para móvil -->
                             <div class="space-y-3">
                                 <!-- Enviar por WhatsApp -->
                                 <a href="{% url 'whatsapp' %}" 
-                                   class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg flex items-center justify-center group text-center">
-                                    <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                                   class="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium py-3 sm:py-3 px-4 rounded-lg sm:rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg flex items-center justify-center group text-center text-sm sm:text-base">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:scale-110 transition-transform flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.109"/>
                                     </svg>
-                                    Finalizar compra por WhatsApp
+                                    <span>Finalizar compra por WhatsApp</span>
                                 </a>
                                 
                                 <!-- Continuar comprando -->
                                 <a href="{% url 'product_list' %}" 
-                                   class="w-full bg-gradient-to-r from-pale_dogwood-400 to-champagne_pink-400 hover:from-pale_dogwood-500 hover:to-champagne_pink-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg flex items-center justify-center hover:text-black">
-                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                   class="w-full bg-gradient-to-r from-pale_dogwood-400 to-champagne_pink-400 hover:from-pale_dogwood-500 hover:to-champagne_pink-500 text-white font-medium py-3 px-4 rounded-lg sm:rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg flex items-center justify-center hover:text-black text-sm sm:text-base">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0L2.586 11H13a1 1 0 100-2H2.586l3.707-3.707a1 1 0 00-1.414-1.414l-5.414 5.414a1 1 0 000 1.414l5.414 5.414a1 1 0 001.414 0z" clip-rule="evenodd"/>
                                     </svg>
                                     Seguir comprando
@@ -171,8 +177,8 @@
                                 
                                 <!-- Vaciar carrito -->
                                 <button onclick="clearCart()" 
-                                        class="w-full bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 font-medium py-3 px-4 rounded-xl border border-red-200 dark:border-red-800 transition-all duration-200 flex items-center justify-center">
-                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        class="w-full bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 font-medium py-3 px-4 rounded-lg sm:rounded-xl border border-red-200 dark:border-red-800 transition-all duration-200 flex items-center justify-center text-sm sm:text-base">
+                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
                                     </svg>
                                     Vaciar carrito
@@ -185,21 +191,21 @@
         {% else %}
             <!-- Carrito vacío -->
             <div class="max-w-md mx-auto text-center">
-                <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-xl border border-timberwolf-200 dark:border-gray-700 p-8">
-                    <div class="mb-6">
-                        <svg class="mx-auto h-24 w-24 text-timberwolf-300 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border border-timberwolf-200 dark:border-gray-700 p-6 sm:p-8">
+                    <div class="mb-4 sm:mb-6">
+                        <svg class="mx-auto h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 text-timberwolf-300 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                    <h3 class="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
                         Tu carrito está vacío
                     </h3>
-                    <p class="text-timberwolf-300 dark:text-gray-400 mb-6">
+                    <p class="text-sm sm:text-base text-timberwolf-300 dark:text-gray-400 mb-4 sm:mb-6 leading-relaxed">
                         Parece que aún no has agregado ningún producto. ¡Explora nuestra tienda y encuentra algo increíble!
                     </p>
                     <a href="{% url 'product_list' %}" 
-                       class="inline-flex items-center bg-gradient-to-r from-pale_dogwood-500 to-champagne_pink-500 hover:from-pale_dogwood-600 hover:to-champagne_pink-600 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg">
-                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                       class="inline-flex items-center bg-gradient-to-r from-pale_dogwood-500 to-champagne_pink-500 hover:from-pale_dogwood-600 hover:to-champagne_pink-600 text-white font-medium py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg text-sm sm:text-base">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                         </svg>
                         Comenzar a comprar
