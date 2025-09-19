@@ -8,6 +8,7 @@ from django.views.generic import FormView
 from django.urls import reverse_lazy
 from .forms import CustomerForm 
 import urllib.parse
+from core.models import SiteConfig
 
 class ProductListView(ListView):
     model = Product
@@ -83,7 +84,11 @@ class WhatsAppView(FormView):
         customer_name = form.cleaned_data['name']
         customer_phone = form.cleaned_data['phone']
         message = self._generate_whatsapp_message(cart, customer_name, customer_phone)
-        whatsapp_url = f"https://wa.me/543834653289?text={message}"
+        # Obtener número de WhatsApp de la configuración
+        site_config = SiteConfig.get_active_config()
+        whatsapp_number = site_config.whatsapp_number if site_config else "543834025848"
+        
+        whatsapp_url = f"https://wa.me/{whatsapp_number}?text={message}"
         return redirect(whatsapp_url)
 
     def _generate_whatsapp_message(self, cart, customer_name, customer_phone):
