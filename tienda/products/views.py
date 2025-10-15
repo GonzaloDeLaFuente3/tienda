@@ -86,7 +86,7 @@ class WhatsAppView(FormView):
         message = self._generate_whatsapp_message(cart, customer_name, customer_phone)
         # Obtener número de WhatsApp de la configuración
         site_config = SiteConfig.get_active_config()
-        whatsapp_number = site_config.whatsapp_number if site_config else "543834025848"
+        whatsapp_number = site_config.whatsapp_number if site_config else "543834653289"
         
         whatsapp_url = f"https://wa.me/{whatsapp_number}?text={message}"
         return redirect(whatsapp_url)

@@ -8,13 +8,13 @@ class CustomerForm(forms.Form):
         widget=forms.TextInput(attrs={'class': 'w-full p-2 border rounded'})
     )
     phone = forms.CharField(
-        label="Número de Teléfono (con código de país, ej: +543834025848)",
+        label="Número de Teléfono (con código de país, ej: +543834653289)",
         max_length=20,
         validators=[
             RegexValidator(
                 regex=r'^\+\d{8,15}$',
-                message="Ingresa un número de teléfono válido con código de país (ej: +543834025848)."
+                message="Ingresa un número de teléfono válido con código de país (ej: +543834653289)."
             )
         ],
-        widget=forms.TextInput(attrs={'class': 'w-full p-2 border rounded', 'placeholder': '+543834025848'})
+        widget=forms.TextInput(attrs={'class': 'w-full p-2 border rounded', 'placeholder': '+543834653289'})
     )
