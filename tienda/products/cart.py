@@ -27,7 +27,7 @@ class Cart:
                 'quantity': 0,
                 'price': str(product.price),
                 'name': product.name,
-                'image': product.image.url if product.image else '',
+                'image': product.image.url if product.image and product.image.name else '/static/placeholder.png',
                 'color_id': color_id,
                 'color_name': color_name,
                 'product_id': product_id

@@ -31,12 +31,20 @@
             >
                 <!-- Contenedor de imagen -->
                 <div class="relative overflow-hidden rounded-t-2xl">
+                    {% if product.image %}
                     <img 
                         src="{{ product.image.url }}" 
                         alt="{{ product.name }}" 
                         class="w-full h-56 sm:h-64 object-cover transition-transform duration-700 group-hover:scale-110"
                         loading="lazy"
                     >
+                    {% else %}
+                        <div class="w-full h-56 sm:h-64 bg-gradient-to-br from-timberwolf-200 to-champagne_pink-200 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-timberwolf-400 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    {% endif %}
                     <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div class="absolute top-3 right-3">
                         {% if product.stock >= 1 %}
